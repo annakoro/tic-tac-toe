@@ -1,7 +1,7 @@
 class TicTacToe {
     constructor() {
         var matrix[2][2];
-        var current = 'o';
+        var current = 'x';
     }
 
     getCurrentPlayerSymbol() {
@@ -10,6 +10,7 @@ class TicTacToe {
     }
 
     nextTurn(rowIndex, columnIndex) {
+        matrix[rowIndex][columnIndex] = current;
         getCurrentPlayerSymbol();
         isFinished();
     }
