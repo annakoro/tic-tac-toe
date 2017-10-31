@@ -1,54 +1,97 @@
 class TicTacToe {
-    constructor() {
-        var matrix[2][2];
-        var current = 'x';
-    }
-
-    getCurrentPlayerSymbol() {
-        if(current === 'o') return 'x';
-        if(current === 'x') return 'o';
-    }
-
-    nextTurn(rowIndex, columnIndex) {
-        matrix[rowIndex][columnIndex] = current;
-        getCurrentPlayerSymbol();
-        isFinished();
-    }
-
-    isFinished() {
-        if(getWinner() || isDraw()) return true;
-    }
-
-    getWinner() {
-        for (i = 0; i<3; i++) { //columns
-            if(matrix[0][i]==matrix[1][i]==matrix[2][i]!= undefined) return matrix[0][i];
+    
+        constructor() {
+            this.field = new Array();
+            for(let i=0; i < 3; i++){
+                this.field[i] = new Array();
+                for(let j = 0; j < 3; j++){
+                    this.field[i][j] = null;
+                }
+            }
+            this.curPlayer = 'x';
         }
-        for (i = 0; i<3; i++) { //rows
-            if(matrix[i][0]==matrix[i][1]==matrix[i][2]!= undefined) return matrix[i][0];
+    
+        getCurrentPlayerSymbol() {
+            return this.curPlayer;
         }
-            if(matrix[0][0]==matrix[1][1]==matrix[2][2]!= undefined) return matrix[0][0]; //diag
-            if(matrix[0][2]==matrix[1][1]==matrix[2][0]!= undefined) return matrix[0][2]; //diag
-        return null;
-    }
-
-    noMoreTurns() {
-       var res = true;
-        for(var i=0; i<3; i++){
-            for(var j=0; j<3; j++){
-                if (!matrix[i][j]) res = false;
+    
+        noMoreTurns() {
+            for(let i=0; i < 3; i++){
+                for(let j = 0; j < 3; j++){
+                    if(this.field[i][j] == null)
+                        return false;
+                }
+            }
+            return true;
+        }
+        nextTurn(rowIndex, columnIndex) {
+    
+            if(this.field[rowIndex][columnIndex] == null) {
+                this.field[rowIndex][columnIndex] = this.curPlayer;
+                if(this.curPlayer=="x")
+                    this.curPlayer="o";
+                else
+                    this.curPlayer="x";
             }
         }
-       return res;
+    
+        isFinished() {
+            if(this.isDraw()|| this.getWinner()!=null)
+                return true;
+            return false;
+        }
+    
+        getWinner() {
+            for(let i=0; i < 3; i++){
+                let checkRow = true, checkCol = true;
+                let symbolRow = this.field[i][0];
+                let symbolCol = this.field[0][i];
+                for(let j=1; j < 3; j++){
+    
+                    if(symbolRow != this.field[i][j]){
+                        checkRow = false;
+                    }
+                    if(symbolCol != this.field[j][i]){
+                        checkCol = false;
+                    }
+                }
+                if(checkRow == true) {
+                    return symbolRow;
+                }
+                if(checkCol == true) {
+                    return symbolCol;
+                }
+            }
+            let checkMain = true,
+                checkSec = true;
+            let symbolMain = this.field[0][0], symbolSec = this.field[0][this.field.length - 1];
+    
+            for(let i=0; i < 3; i++){
+                let field;
+                if(symbolMain != this.field[i][i])
+                    checkMain = false;
+    
+                if(symbolSec != this.field[i][this.field.length-1-i])
+                    checkSec = false;
+            }
+            if(checkSec == true)
+                return symbolSec;
+            if(checkMain == true)
+                return symbolMain;
+            return null;
+    
+        }
+    
+        isDraw() {
+    
+            if(this.noMoreTurns() && this.getWinner() == null)
+                return true;
+            return false;
+    
+        }
+        getFieldValue(rowIndex, colIndex) {
+    
+            return this.field[rowIndex][colIndex];
+        }
     }
-
-    isDraw() {
-        if(noMoreTurns() && getWinner() === null) return true;
-    }
-
-    getFieldValue(rowIndex, colIndex) {
-        if(matrix[rowIndex][colIndex] === undefined) return null;
-        else return matrix[rowIndex][colIndex];
-    }
-}
-
-module.exports = TicTacToe;
+    module.exports = TicTacToe;
